@@ -1,24 +1,24 @@
-TARGET=main
+TARGET?=main
 
-HDRS=$(wildcard *.h) API_KEY
+HDRS?=$(wildcard *.h) API_KEY
 
-SRCS=$(wildcard *.cpp)
+SRCS?=$(wildcard *.cpp)
 
-PKG_LIBS=libcrypto
+PKG_LIBS?=libcrypto
 
-CXX=g++
+CXX?=g++
 
 # flags passed to C++ preprocessor
-CPPFLAGS=$(shell curl-config --cflags)
+CPPFLAGS?=$(shell curl-config --cflags)
 
 # flags passed to C++ compiler
-CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++14 -O3
+CXXFLAGS?=-Wall -Wextra -pedantic-errors -std=c++14 -O3
 
 # non-library flags passed to linker
-LDFLAGS=
+LDFLAGS?=
 
 # library flags passed to linker
-LDLIBS=$(shell curl-config --libs) -lboost_json
+LDLIBS?=$(shell curl-config --libs) -lboost_json
 
 #######################################################
 # You are unlikely to need to modify the content below.
