@@ -1,47 +1,47 @@
 TARGET=main
 
-HEADERS=$(wildcard *.h) API_KEY
+HDRS=$(wildcard *.h) API_KEY
 
 SRCS=$(wildcard *.cpp)
 
-PKG_LIB_NAMES=libcrypto
+PKG_LIBS=libcrypto
 
-# CXX=g++
+CXX=g++
 
 # flags passed to C++ preprocessor
-MANUAL_CPPFLAGS=$(shell curl-config --cflags)
+CPPFLAGS=$(shell curl-config --cflags)
 
 # flags passed to C++ compiler
-MANUAL_CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++14 -O3
+CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++14 -O3
 
 # non-library flags passed to linker
-MANUAL_LDFLAGS=
+LDFLAGS=
 
 # library flags passed to linker
-MANUAL_LDLIBS=$(shell curl-config --libs) -lboost_json
+LDLIBS=$(shell curl-config --libs) -lboost_json
 
-#####################################################
-# You will unlikely need to modify the content below.
-#####################################################
+#######################################################
+# You are unlikely to need to modify the content below.
+#######################################################
 
 OBJS=$(patsubst %.cpp,%.o,$(SRCS))
 
-CPPFLAGS=$(shell pkg-config --cflags $(PKG_LIB_NAMES)) $(MANUAL_CPPFLAGS)
+EFFECTIVE_CPPFLAGS=$(shell pkg-config --cflags $(PKG_LIBS)) $(CPPFLAGS)
 
-CXXFLAGS=$(MANUAL_CXXFLAGS)
+EFFECTIVE_CXXFLAGS=$(CXXFLAGS)
 
-LDFLAGS=$(shell pkg-config --libs-only-L --libs-only-other $(PKG_LIB_NAMES)) \
-	$(MANUAL_LDFLAGS)
+EFFECTIVE_LDFLAGS=$(shell pkg-config --libs-only-L --libs-only-other \
+		  $(PKG_LIBS)) $(LDFLAGS)
 
-LDLIBS=$(shell pkg-config --libs-only-l $(PKG_LIB_NAMES)) $(MANUAL_LDLIBS)
+EFFECTIVE_LDLIBS=$(shell pkg-config --libs-only-l $(PKG_LIBS)) $(LDLIBS)
 
 DEPEND=depend
 
 all: $(TARGET)
 
-$(DEPEND): $(HEADERS) $(SRCS)
+$(DEPEND): $(HDRS) $(SRCS)
 	@echo Making dependency graph...
-	$(CXX) $(CPPFLAGS) -MM $(SRCS) >$@
+	$(CXX) $(EFFECTIVE_CPPFLAGS) -MM $(SRCS) >$@
 	@echo
 
 include $(DEPEND)
@@ -49,12 +49,12 @@ include $(DEPEND)
 %.o: %.cpp
 	@echo Compiling source file...
 	@echo Dependencies: $^
-	$(CXX) -o $@ $(CPPFLAGS) $(CXXFLAGS) -c $<
+	$(CXX) -o $@ $(EFFECTIVE_CPPFLAGS) $(EFFECTIVE_CXXFLAGS) -c $<
 	@echo
 
 $(TARGET): $(OBJS)
 	@echo Linking object files...
-	$(CXX) -o $@ $(LDFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $@ $(EFFECTIVE_LDFLAGS) $^ $(EFFECTIVE_LDLIBS)
 	@echo
 
 clean:
