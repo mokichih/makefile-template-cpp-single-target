@@ -6,6 +6,8 @@ SRCS=$(wildcard *.cpp)
 
 PKG_LIB_NAMES=libcrypto
 
+# CXX=g++
+
 # flags passed to C++ preprocessor
 MANUAL_CPPFLAGS=$(shell curl-config --cflags)
 
