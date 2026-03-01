@@ -10,7 +10,7 @@ PKG_LIB_NAMES=libcrypto
 MANUAL_CPPFLAGS=$(shell curl-config --cflags)
 
 # flags passed to C++ compiler
-MANUAL_CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++14
+MANUAL_CXXFLAGS=-Wall -Wextra -pedantic-errors -std=c++14 -O3
 
 # non-library flags passed to linker
 MANUAL_LDFLAGS=
@@ -18,9 +18,9 @@ MANUAL_LDFLAGS=
 # library flags passed to linker
 MANUAL_LDLIBS=$(shell curl-config --libs) -lboost_json
 
-####################################################
-# You will unlikey need to modify the content below.
-####################################################
+#####################################################
+# You will unlikely need to modify the content below.
+#####################################################
 
 OBJS=$(patsubst %.cpp,%.o,$(SRCS))
 
